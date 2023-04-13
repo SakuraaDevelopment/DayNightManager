@@ -14,7 +14,7 @@ namespace Sakuraa_TimeChanger.Patches
 	{
 		private static void Postfix(GorillaLocomotion.Player __instance)
 		{
-			Console.WriteLine(__instance.maxJumpSpeed);
+			Console.WriteLine(__instance.maxJumpSpeed); // I could just delete this but like who cares lol
 		}
 	}
 }

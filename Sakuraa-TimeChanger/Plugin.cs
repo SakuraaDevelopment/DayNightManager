@@ -1,75 +1,51 @@
 ﻿using System;
+using System.Reflection;
 using BepInEx;
+using GorillaNetworking;
 using UnityEngine;
 using Utilla;
 
 namespace Sakuraa_TimeChanger
 {
-	/// <summary>
-	/// This is your mod's main class.
-	/// </summary>
+    [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
+    [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
+    public class Plugin : BaseUnityPlugin
+    {
 
-	/* This attribute tells Utilla to look for [ModdedGameJoin] and [ModdedGameLeave] */
-	[ModdedGamemode]
-	[BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
-	[BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
-	public class Plugin : BaseUnityPlugin
-	{
-		bool inRoom;
+        void Start()
+        {
+            Utilla.Events.GameInitialized += OnGameInitialized;
+        }
 
-		void Start()
-		{
-			/* A lot of Gorilla Tag systems will not be set up when start is called /*
-			/* Put code in OnGameInitialized to avoid null references */
+        void OnEnable()
+        {
+            HarmonyPatches.ApplyHarmonyPatches();
+        }
 
-			Utilla.Events.GameInitialized += OnGameInitialized;
-		}
+        void OnDisable()
+        {
+            HarmonyPatches.RemoveHarmonyPatches();
+        }
 
-		void OnEnable()
-		{
-			/* Set up your mod here */
-			/* Code here runs at the start and whenever your mod is enabled*/
+        void OnGameInitialized(object sender, EventArgs e)
+        {
+            Debug.Log("STC: Game Initialized");
+        }
 
-			HarmonyPatches.ApplyHarmonyPatches();
-		}
+        void Update()
+        {
+            // Find the BetterDayNight GameObject in the scene
+            GameObject betterDayNight = GameObject.Find("BetterDayNight");
 
-		void OnDisable()
-		{
-			/* Undo mod setup here */
-			/* This provides support for toggling mods with ComputerInterface, please implement it :) */
-			/* Code here runs whenever your mod is disabled (including if it disabled on startup)*/
+            // Get the BetterDayNightManager component
+            BetterDayNightManager betterDayNightManager = betterDayNight.GetComponent<BetterDayNightManager>();
 
-			HarmonyPatches.RemoveHarmonyPatches();
-		}
-
-		void OnGameInitialized(object sender, EventArgs e)
-		{
-			/* Code here runs after the game initializes (i.e. GorillaLocomotion.Player.Instance != null) */
-		}
-
-		void Update()
-		{
-			/* Code here runs every frame when the mod is enabled */
-		}
-
-		/* This attribute tells Utilla to call this method when a modded room is joined */
-		[ModdedGamemodeJoin]
-		public void OnJoin(string gamemode)
-		{
-			/* Activate your mod here */
-			/* This code will run regardless of if the mod is enabled*/
-
-			inRoom = true;
-		}
-
-		/* This attribute tells Utilla to call this method when a modded room is left */
-		[ModdedGamemodeLeave]
-		public void OnLeave(string gamemode)
-		{
-			/* Deactivate your mod here */
-			/* This code will run regardless of if the mod is enabled*/
-
-			inRoom = false;
-		}
-	}
+            // Use reflection to access the private baseSeconds field
+            var baseSecondsField = typeof(BetterDayNightManager).GetField("baseSeconds", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (baseSecondsField != null)
+            {
+                baseSecondsField.SetValue(betterDayNightManager, 26000.0); // night time
+            }
+        }
+    }
 }
