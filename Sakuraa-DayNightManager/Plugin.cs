@@ -1,35 +1,19 @@
 ﻿using System;
 using System.Reflection;
 using BepInEx;
-using GorillaNetworking;
 using UnityEngine;
 using Utilla;
 
-namespace Sakuraa_TimeChanger
+namespace Sakuraa_DayNightManager
 {
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
     [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin
     {
 
-        void Start()
-        {
-            Utilla.Events.GameInitialized += OnGameInitialized;
-        }
-
-        void OnEnable()
-        {
-            HarmonyPatches.ApplyHarmonyPatches();
-        }
-
-        void OnDisable()
-        {
-            HarmonyPatches.RemoveHarmonyPatches();
-        }
-
         void OnGameInitialized(object sender, EventArgs e)
         {
-            Debug.Log("STC: Game Initialized");
+            Debug.Log("DNM: Game Initialized");
         }
 
         void Update()
@@ -44,7 +28,7 @@ namespace Sakuraa_TimeChanger
             var baseSecondsField = typeof(BetterDayNightManager).GetField("baseSeconds", BindingFlags.NonPublic | BindingFlags.Instance);
             if (baseSecondsField != null)
             {
-                baseSecondsField.SetValue(betterDayNightManager, 26000.0); // night time
+                baseSecondsField.SetValue(betterDayNightManager, 10000.0);
             }
         }
     }

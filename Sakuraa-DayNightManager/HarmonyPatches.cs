@@ -2,7 +2,7 @@
 using System.Reflection;
 using HarmonyLib;
 
-namespace Sakuraa_TimeChanger
+namespace Sakuraa_DayNightManager
 {
 	/// <summary>
 	/// This class handles applying harmony patches to the game.
