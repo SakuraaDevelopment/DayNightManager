@@ -1,8 +1,5 @@
 ﻿namespace Sakuraa_DayNightManager
 {
-	/// <summary>
-	/// This class is used to provide information about your mod to BepInEx.
-	/// </summary>
 	class PluginInfo
 	{
 		public const string GUID = "com.sakuraa.gorillatag.sakuraa-daynightmanager";
